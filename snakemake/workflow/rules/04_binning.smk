@@ -109,7 +109,7 @@ rule prokka_coassembly:
         """
 
 def get_prokka_output_coassembly(wildcards):
-    checkpoint_output = checkpoints.bin_filter.get(**wildcards).output[0]
+    checkpoint_output = checkpoints.bin_filter_coassembly.get(**wildcards).output[0]
     return expand("results/prokka_coassembly/{sample}/{bin}/{bin}.tsv", sample = wildcards.sample, bin = glob_wildcards(os.path.join(checkpoint_output, "{bin}.fa")).bin)
 
 rule aggregate_prokka_coassembly:
