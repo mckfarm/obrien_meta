@@ -1,0 +1,5 @@
+sample_name,forward,reverse
+OB1,/projects/p31629/raw_reads_meta/OB1_S298_R1_001.fastq.gz,/projects/p31629/raw_reads_meta/OB1_S298_R2_001.fastq.gz
+OB2,/projects/p31629/raw_reads_meta/OB2_S299_R1_001.fastq.gz,/projects/p31629/raw_reads_meta/OB2_S299_R2_001.fastq.gz
+OB3,/projects/p31629/raw_reads_meta/OB3_S47_R1_001.fastq.gz,/projects/p31629/raw_reads_meta/OB3_S47_R2_001.fastq.gz
+OB4,/projects/p31629/raw_reads_meta/OB4_S301_R1_001.fastq.gz,/projects/p31629/raw_reads_meta/OB4_S301_R2_001.fastq.gz
