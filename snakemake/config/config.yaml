@@ -1,10 +1,8 @@
 ### sample sheet ###
 sample_sheet: "config/sample_sheet.csv"
 
-
 ### modules ###
 readqc: TRUE
 readanalysis: TRUE
-assembly: TRUE
+coassembly: TRUE
 binning: TRUE
-contiganalysis: TRUE
