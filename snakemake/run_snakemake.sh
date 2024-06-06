@@ -2,7 +2,7 @@
 #SBATCH -A b1042
 #SBATCH -p genomicsguestex
 #SBATCH --job-name="scheduler"
-#SBATCH -t 50:00:00
+#SBATCH -t 35:00:00
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --mem=500Mb
