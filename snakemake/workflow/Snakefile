@@ -13,6 +13,7 @@ include: "rules/01_readqc.smk"
 include: "rules/02_readanalysis.smk"
 include: "rules/03_coassembly.smk"
 include: "rules/04_binning.smk"
+include: "rules/05_contiganalysis.smk"
 
 rule all:
     input:
