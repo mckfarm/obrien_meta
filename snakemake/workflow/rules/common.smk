@@ -50,7 +50,7 @@ def get_rules(wildcards):
 
         all_rules.append("results/pyrodigal/cds.gff")
 
-        all_rules.append("results/diamond_contigs/uniref100_denit.tsv")
+        all_rules.append("results/diamond_contigs/uniref90_denit.tsv")
 
         all_rules = all_rules + expand(
             "results/pileup/{sample}/{sample}.pileup.txt", sample=sample_sheet["sample_name"])

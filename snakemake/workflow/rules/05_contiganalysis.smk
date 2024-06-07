@@ -19,9 +19,9 @@ rule diamond_denit:
     input:
          "results/pyrodigal/cds_proteins.faa"
     output:
-        "results/diamond_contigs/uniref100_denit.tsv"
+        "results/diamond_contigs/uniref90_denit.tsv"
     params:
-        db_loc = "/projects/p31629/resources/uniref100_denit"
+        db_loc = "/projects/p31629/resources/denit_uniref90"
     threads: 10
     conda: "../envs/diamond.yaml"
     resources:
