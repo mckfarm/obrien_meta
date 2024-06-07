@@ -44,6 +44,19 @@ def get_rules(wildcards):
 
         all_rules = all_rules + expand(
             "results/prokka_coassembly/{sample}/aggregate.txt", sample=sample_sheet["sample_name"])
+    
+    if config["contiganalysis"]: 
+        all_rules.append("results/pyrodigal/cds_proteins.faa")
+
+        all_rules.append("results/pyrodigal/cds.gff")
+
+        all_rules.append("results/diamond_contigs/uniref100_denit.tsv")
+
+        all_rules = all_rules + expand(
+            "results/pileup/{sample}/{sample}.pileup.txt", sample=sample_sheet["sample_name"])
+
+        all_rules = all_rules + expand(
+            "results/pileup/{sample}/{sample}.depth.txt", sample=sample_sheet["sample_name"])
 
     return all_rules
 

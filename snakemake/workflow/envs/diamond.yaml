@@ -1,0 +1,6 @@
+name: pyrodigal
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - diamond=2.1.9

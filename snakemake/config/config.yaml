@@ -6,3 +6,4 @@ readqc: TRUE
 readanalysis: TRUE
 coassembly: TRUE
 binning: TRUE
+contiganalysis: TRUE
