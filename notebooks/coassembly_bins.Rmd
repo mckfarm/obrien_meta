@@ -1,0 +1,68 @@
+```{r}
+library(tidyverse)
+
+samples <- data.frame(sample = c("OB1", "OB2", "OB3", "OB4"),
+                      date = c(ymd("2022-10-24"), ymd("2022-10-24"), ymd("2023-03-06"), ymd("2023-03-06")),
+                      reactor = c("EBPR", "S2EBPR", "EBPR", "S2EBPR"))
+```
+
+read in checkm
+```{r}
+get_filenames <- function(path_to_folder, samples, suffix){
+  name <- paste0(path_to_folder, samples, "/", samples, suffix)
+  return(name)
+}
+
+checkm_files <- lapply(samples$sample, get_filenames, 
+                      path_to_folder = "./results/metabat_checkm_coassembly/", suffix = "_checkm_output.txt")
+  
+  
+checkm_all <- lapply(checkm_files, read_delim)
+names(checkm_all) <- samples$sample
+
+
+filter_checkm <- function(checkm_df){
+  df <- checkm_df %>%
+    filter(Completeness >= 50 & Contamination <= 10)
+  return(df)
+}
+
+checkm_filt <- lapply(checkm_all, filter_checkm)
+
+rm(checkm_all, checkm_files)
+
+```
+
+GTDB
+```{r}
+gtdb_read_and_filter <- function(samples){
+  file_name <- paste0("./results/gtdbtk_coassembly/", samples, "/classify/gtdbtk.bac120.summary.tsv")
+  gtdb_all <- read_delim(file_name)
+  gtdb_filt <- gtdb_all %>%
+    filter(user_genome %in% checkm_filt[[samples]]$`Bin Id`)
+  return(gtdb_filt)
+}
+
+gtdb_filt <- lapply(samples$sample, gtdb_read_and_filter)
+names(gtdb_filt) <- samples$sample
+
+gtdb_df <- bind_rows(gtdb_filt, .id = "sample")
+saveRDS(gtdb_df, "./notebooks/data_files/gtdb_filt_df.RDS")
+
+rm(checkm_filt, gtdb_filt)
+
+```
+
+GTDB PAO and GAO
+```{r}
+gtdb_get_pao_gao <- function(samples){
+  gtdb_pao_gao <- gtdb_filt[[samples]] %>%
+    filter(str_detect(classification, "(?i)accumulibacter|competibacter|phosphoribacter|azonexus|tetrasphaera"))
+  return(gtdb_pao_gao)
+}
+
+gtdb_pao_gao <- lapply(samples$sample, gtdb_get_pao_gao)
+
+```
+
+
