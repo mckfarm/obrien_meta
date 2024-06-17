@@ -1,0 +1,52 @@
+Packages
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+
+Sample data frame
+```{r}
+sample_dates <- data.frame(sample = c("OB1", "OB2", "OB3", "OB4"),
+                      date = c(ymd("2022-10-24"), ymd("2022-10-24"), ymd("2023-03-06"), ymd("2023-03-06")),
+                      reactor = c("EBPR", "S2EBPR", "EBPR", "S2EBPR"),
+                      carbon = c("OFF", "OFF", "OFF", "ON"),
+                      reactor_carbon = c("EBPR fall no carbon", "S2EBPR fall no carbon", "EBPR spring no carbon", "S2EBPR spring carbon"))
+
+```
+
+read in data
+```{r}
+depth_pao_gao_clean <- read_xlsx("~/OneDrive - Northwestern University/Project folders/S2EBPR metagenomics/obrien2023/data/gene_abundances.xlsx") %>%
+  filter(!is.na(protein_clean)) %>%
+  mutate(group = case_when(str_detect(protein_clean, "(?i)nitrate") ~ "Nitrate",
+                           str_detect(protein_clean, "(?i)nitrite") ~ "Nitrite",
+                           str_detect(protein_clean, "(?i)nitric oxide") ~ "Nitric oxide",
+                           str_detect(protein_clean, "(?i)nitrous oxide") ~ "Nitrous oxide")) %>%
+  mutate(group = factor(group, levels = c("Nitrate", "Nitrite", "Nitric oxide", "Nitrous oxide"))) %>%
+  pivot_longer(cols = c("OB1", "OB2", "OB3", "OB4"), names_to = "sample", values_to = "sum_rpkm") %>%
+  left_join(sample_dates, by = "sample") %>%
+  group_by(sample, group, reactor_carbon, protein_clean, organism_clean) %>%
+  summarise(sum_rpkm = sum(sum_rpkm)) %>%
+  filter(sum_rpkm > 0) %>%
+  mutate(organism_clean = factor(organism_clean, levels = c("Accumulibacter", "Dechloromonas", "Phosphoribacter", "Tetrasphaera", "Competibacter", "Contendobacter")))
+```
+
+
+heatmap
+```{r}
+# my_breaks <- c(0.1, 0.3, 9, 27, 81, 243)
+
+ggplot(depth_pao_gao_clean , aes(x = reactor_carbon, y = protein_clean, fill = sum_rpkm)) +
+  geom_tile() +
+  facet_grid(group ~ organism_clean, scales = "free") +
+  scale_fill_distiller(palette = "GnBu", direction = 1, name = "RPKM", trans = "log10")  +
+  theme_classic() +
+  theme(strip.text.x = element_text(face = "italic"), 
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(x = "", y = "")
+  
+ggsave(file.path("~/OneDrive - Northwestern University/Project folders/S2EBPR metagenomics/obrien2023/figures/denit_heatmap.png"), width = 12, height = 5, units = "in", dpi = 320)
+  
+```
